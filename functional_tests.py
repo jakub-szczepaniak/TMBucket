@@ -17,7 +17,7 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000/')
         #and sees index page with 'TMBucket as a browser title'
 
-        assert 'TMBUcket' in self.browser.title
+        assert 'TMBucket' in self.browser.title
         #User is prompted to enter text and its translation.
         #'This is personal matter of the squirrel'-> 'Das ist ein Privateingelegenheit des Eichhornchens' 
         #after confirming the entry with clicking 'commit' page updates
