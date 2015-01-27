@@ -19,4 +19,20 @@ class NewPage(TestCase):
         expected_html = render_to_string('home.html')
         
         self.assertEqual(response.content.decode(), expected_html)
+    def test_home_page_can_save_POST_request(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['source_text'] = "Test source string"
+        request.POST['target_text'] = 'Test target string'
+        response = home_page(request)
+        
+        self.assertIn('Test source string', response.content.decode())
+        #self.assertIn('Test target string', response.content.decode())
+        expected_html = render_to_string(
+                        'home.html', 
+                        {'source_item_text': 'Test source string',
+                        'target_item_text': 'Test target string'
+                         }
+            )
+        self.assertEqual(response.content.decode(), expected_html)
         
