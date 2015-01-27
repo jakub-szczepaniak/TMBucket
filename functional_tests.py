@@ -21,7 +21,7 @@ class NewVisitorTest(unittest.TestCase):
 
         self.assertIn('TMBucket', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1')
-        self.assertIn('TMBucket', header_text)
+        self.assertIn('TMBucket', header_text.text)
         #User is prompted to enter text and its translation.
         inputbox = self.browser.find_element_by_id('id_source_text')
         self.assertEqual('Enter source text', inputbox.get_attribute('placeholder'))
@@ -39,10 +39,12 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('td')
 
         self.assertTrue(
-                    any (row.text == 'This is personal matter of the squirrel' for row in rows)
+                    any (row.text == 'This is personal matter of the squirrel' for row in rows),
+                    "Entered source text did not appear in the table"
         )
         self.assertTrue(
-                    any (row.text == 'Das ist ein Privateingelegenheit des Eichhornchens' for row in rows)
+                    any (row.text == 'Das ist ein Privateingelegenheit des Eichhornchens' for row in rows),
+                    "Entered source text did not appear in the table"
         )
 
         self.fail('Finish your test!')
