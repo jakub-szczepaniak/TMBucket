@@ -4,12 +4,15 @@
     <form method="POST">
         <input name='source_text' id="id_source_text" placeholder='Enter source text' />
         <input name='target_text' id="id_target_text" placeholder='Enter translation text' />
+        <button action="submit">Add</button>
         {% csrf_token %}
     </form>
     <table id="id_translation_table">
+        {% for trans_unit in trans_units %}
         <tr>
-            <td>1: {{ source_item_text }}</td>
-            <td>{{ target_item_text }}</td>
+            <td>{{ forloop.counter }}: {{ trans_unit.source }}</td>
+            <td>{{ trans_unit.target }}</td>
         </tr>
+        {% endfor %}
     </table>
 </html>

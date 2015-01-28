@@ -1,10 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from translations.models import TranslationUnit
 
 # Create your views here.
 def home_page(request):
     if request.method=='POST':
-        return render(request, 'home.html', {'source_item_text' : request.POST['source_text'],
-                                             'target_item_text' : request.POST['target_text']
-                                            })
-    return render(request, 'home.html')
+        
+        
+        TranslationUnit.objects.create(source=request.POST['source_text'],
+                                    target=request.POST['target_text'])
+        
+        return redirect('/')    
+    trans_units = TranslationUnit.objects.all()
+    return render(request, 'home.html', {'trans_units': trans_units})
+    

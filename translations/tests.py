@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from translations.views import home_page
 from translations.models import TranslationUnit
 
-class NewPage(TestCase):
+class HomePage(TestCase):
 
     def test_root_url_resolves_to_home_page(self):
 
@@ -26,15 +26,41 @@ class NewPage(TestCase):
         request.POST['target_text'] = 'Test target string'
         response = home_page(request)
         
-        self.assertIn('Test source string', response.content.decode())
-        #self.assertIn('Test target string', response.content.decode())
-        expected_html = render_to_string(
-                        'home.html', 
-                        {'source_item_text': 'Test source string',
-                        'target_item_text': 'Test target string'
-                         }
-            )
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(TranslationUnit.objects.count(), 1)
+        new_transunit = TranslationUnit.objects.first()
+
+        self.assertEqual(new_transunit.source, 'Test source string')
+        self.assertEqual(new_transunit.target, 'Test target string')
+
+        
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method='POST'
+
+        request.POST['source_text'] = "Test source string"
+        request.POST['target_text'] = 'Test target string'
+        response = home_page(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+    
+    def test_home_page_saves_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        
+        self.assertEqual(TranslationUnit.objects.count(), 0)
+
+    def test_display_all_items_from_database(self):
+        TranslationUnit.objects.create(source='sample1', target='sample2')
+        TranslationUnit.objects.create(source='sample3', target='sample4')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('sample1', response.content.decode())
+        self.assertIn('sample2', response.content.decode())
+        self.assertIn('sample3', response.content.decode())
+        self.assertIn('sample4', response.content.decode())
 
 class TranslationUnitModelTest(TestCase):
 
@@ -50,7 +76,6 @@ class TranslationUnitModelTest(TestCase):
         second_translation_unit.target = 'snd target'
 
         second_translation_unit.save()
-
 
         saved_translation_units = TranslationUnit.objects.all()
         self.assertEqual(saved_translation_units.count(), 2)

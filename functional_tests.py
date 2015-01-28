@@ -52,6 +52,12 @@ class NewVisitorTest(unittest.TestCase):
         #there is an editing box again, prompting for further entry
         #User enters another text:
         #'My cat peed in the suitcase' -> 'Meine Katze hat in einem Koffer gepinkelt'
+        inputbox = self.browser.find_element_by_id('id_source_text')
+        self.assertEqual('Enter source text', inputbox.get_attribute('placeholder'))
+
+        inputbox2 = self.browser.find_element_by_id('id_target_text')
+        self.assertEqual('Enter translation text', inputbox2.get_attribute('placeholder'))
+        
         inputbox.send_keys('My cat peed in the suitcase')
         inputbox2.send_keys('Meine Katze hat in einem Koffer gepinkelt') 
 
