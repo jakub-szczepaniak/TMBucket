@@ -1,0 +1,4 @@
+Todo :
+
+display more items in the table
+support more than one list of translations (Translation Memory)
