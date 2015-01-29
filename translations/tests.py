@@ -14,41 +14,13 @@ class HomePage(TestCase):
         self.assertEqual(found.func, home_page)
 
     def test_home_page_returns_correct_html(self):
+        
         request = HttpRequest()
         response = home_page(request)
         expected_html = render_to_string('home.html')
         
         self.assertEqual(response.content.decode(), expected_html)
-    def test_home_page_can_save_POST_request(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['source_text'] = "Test source string"
-        request.POST['target_text'] = 'Test target string'
-        response = home_page(request)
-        
-        self.assertEqual(TranslationUnit.objects.count(), 1)
-        new_transunit = TranslationUnit.objects.first()
-
-        self.assertEqual(new_transunit.source, 'Test source string')
-        self.assertEqual(new_transunit.target, 'Test target string')
-
-        
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
-        request.method='POST'
-
-        request.POST['source_text'] = "Test source string"
-        request.POST['target_text'] = 'Test target string'
-        response = home_page(request)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/tms/new_translation_memory')
-    
-    def test_home_page_saves_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        
-        self.assertEqual(TranslationUnit.objects.count(), 0)
+           
 
     
 class TMViewTest(TestCase):
@@ -60,6 +32,7 @@ class TMViewTest(TestCase):
         self.assertTemplateUsed(response, 'tms.html')
 
     def test_display_all_items_from_database(self):
+        
         TranslationUnit.objects.create(source='sample1', target='sample2')
         TranslationUnit.objects.create(source='sample3', target='sample4')
 
@@ -70,6 +43,29 @@ class TMViewTest(TestCase):
         self.assertContains(response, 'sample3')
         self.assertContains(response, 'sample4')
 
+    def test_can_save_POST_request(self):
+        
+        self.client.post('/tms/new', 
+                    data = {'source_text':"Test source string",
+                    'target_text': 'Test target string'}
+                    )
+        
+        self.assertEqual(TranslationUnit.objects.count(), 1)
+        
+        new_transunit = TranslationUnit.objects.first()
+
+        self.assertEqual(new_transunit.source, 'Test source string')
+        self.assertEqual(new_transunit.target, 'Test target string')
+
+    def test_redirects_after_POST(self):
+        
+        response = self.client.post(
+            '/tms/new',
+            data = {'source_text':"Test source string",
+                    'target_text': 'Test target string'}
+            )
+        self.assertRedirects(response, '/tms/new_translation_memory')
+        
 class TranslationUnitModelTest(TestCase):
 
     def test_saving_and_retrieving(self):
