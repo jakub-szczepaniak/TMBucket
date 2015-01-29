@@ -1,0 +1,18 @@
+<html>
+    <title>TMBucket</title>
+    <h1>TMBucket</h1>
+    <form method="POST">
+        <input name='source_text' id="id_source_text" placeholder='Enter source text' />
+        <input name='target_text' id="id_target_text" placeholder='Enter translation text' />
+        <button action="submit">Add</button>
+        {% csrf_token %}
+    </form>
+    <table id="id_translation_table">
+        {% for trans_unit in trans_units %}
+        <tr>
+            <td>{{ forloop.counter }}: {{ trans_unit.source }}</td>
+            <td>{{ trans_unit.target }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</html>

@@ -22,6 +22,7 @@ class NewVisitorTest(LiveServerTestCase):
         rows = table.find_elements_by_tag_name('td')
         
         self.assertIn(row_text, [row.text for row in rows])
+    
 
     def test_can_enter_translations_and_retrieve(self):
         #User goes to main page of the TM bucket
@@ -89,10 +90,11 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
         
         #there is no sign of already entered items
-        page_text = self.browser.find_element_by_tag_name('body')
+        page_text = self.browser.find_element_by_tag_name('body').text
         
         self.assertNotIn('This is personal matter of the squirrel', page_text)
-        self.assertNotIn('My cat peed')
+        self.assertNotIn('My cat peed', page_text)
+        
         #User2 enters his own text and translation
         
         inputbox = self.browser.find_element_by_id('id_source_text')
@@ -105,10 +107,15 @@ class NewVisitorTest(LiveServerTestCase):
 
         self.assertRegex(yet_new_list, '/tms/.+')
 
+        #2nd user url is different from 1st url
+        self.assertNotEqual(new_list, yet_new_list)
         #2nd user can see only his items, not items from the 1st user
-        page_text = self.browser.find_element_by_tag_name('body')
-
+        
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
+        
+        #2nd user closes the browser
+        self.browser.quit()
         self.fail('Finish your test!')
 
