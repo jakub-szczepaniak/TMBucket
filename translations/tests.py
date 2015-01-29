@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from translations.views import home_page
-from translations.models import TranslationUnit
+from translations.models import TranslationUnit, TM
 
 class HomePage(TestCase):
 
@@ -33,8 +33,9 @@ class TMViewTest(TestCase):
 
     def test_display_all_items_from_database(self):
         
-        TranslationUnit.objects.create(source='sample1', target='sample2')
-        TranslationUnit.objects.create(source='sample3', target='sample4')
+        tm = TM.objects.create()
+        TranslationUnit.objects.create(source='sample1', target='sample2', tm=tm)
+        TranslationUnit.objects.create(source='sample3', target='sample4', tm=tm)
 
         response = self.client.get('/tms/new_translation_memory')
 
@@ -66,27 +67,35 @@ class TMViewTest(TestCase):
             )
         self.assertRedirects(response, '/tms/new_translation_memory')
         
-class TranslationUnitModelTest(TestCase):
+class TMandTUModelTest(TestCase):
 
     def test_saving_and_retrieving(self):
+        tm = TM()
+        tm.save()
         first_translation_unit = TranslationUnit()
         first_translation_unit.source = "Source"
         first_translation_unit.target = "Target"
+        first_translation_unit.tm = tm
 
         first_translation_unit.save()
 
         second_translation_unit = TranslationUnit()
         second_translation_unit.source = 'The 2nd Source'
         second_translation_unit.target = 'snd target'
-
+        second_translation_unit.tm = tm
         second_translation_unit.save()
+
+        saved_tm = TM.objects.first()
+        self.assertEqual(saved_tm, tm)
 
         saved_translation_units = TranslationUnit.objects.all()
         self.assertEqual(saved_translation_units.count(), 2)
        
         first_saved_translation_unit = saved_translation_units[0]
         second_saved_translation_unit = saved_translation_units[1]
-        self.assertEqual(first_translation_unit, first_saved_translation_unit)
-        self.assertEqual(second_saved_translation_unit, second_translation_unit)
+        self.assertEqual(first_translation_unit.source, first_saved_translation_unit.source)
+        self.assertEqual(first_translation_unit.tm, tm)
+        self.assertEqual(second_saved_translation_unit.target, second_translation_unit.target)
+        self.assertEqual(second_saved_translation_unit.tm, tm)
 
         

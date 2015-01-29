@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from translations.models import TranslationUnit
+from translations.models import TranslationUnit, TM
 
 # Create your views here.
 def home_page(request):  
@@ -17,8 +17,8 @@ def view_tm(request):
     return render(request, 'tms.html', {'trans_units': trans_units})
 
 def new_tm(request):
-    
+    tm = TM.objects.create()
     TranslationUnit.objects.create(source=request.POST['source_text'],
-        target=request.POST['target_text'])
+        target=request.POST['target_text'], tm=tm)
     return redirect('/tms/new_translation_memory')
     

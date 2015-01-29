@@ -2,5 +2,4 @@ Todo :
 
 adjust models so that tunits can be in different TMs
 add unique URL for TM
-add a URL for creating new TM
 add URL for adding items to TM
