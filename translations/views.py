@@ -8,9 +8,9 @@ def home_page(request):
         TranslationUnit.objects.create(source=request.POST['source_text'],
                                     target=request.POST['target_text'])
         return redirect('/tms/new-translation-memory/')    
-    trans_units = TranslationUnit.objects.all()
-    return render(request, 'home.html', {'trans_units': trans_units})
+    
+    return render(request, 'home.html')
 def view_tms(request):
     trans_units = TranslationUnit.objects.all()
-    return render(request, 'home.html', {'trans_units': trans_units})
+    return render(request, 'tms.html', {'trans_units': trans_units})
     
