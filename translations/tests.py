@@ -50,17 +50,6 @@ class HomePage(TestCase):
         
         self.assertEqual(TranslationUnit.objects.count(), 0)
 
-    def test_display_all_items_from_database(self):
-        TranslationUnit.objects.create(source='sample1', target='sample2')
-        TranslationUnit.objects.create(source='sample3', target='sample4')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('sample1', response.content.decode())
-        self.assertIn('sample2', response.content.decode())
-        self.assertIn('sample3', response.content.decode())
-        self.assertIn('sample4', response.content.decode())
 
 class TMViewTest(TestCase):
     def test_display_all_items(self):
@@ -73,6 +62,9 @@ class TMViewTest(TestCase):
         self.assertContains(response, 'sample2')
         self.assertContains(response, 'sample3')
         self.assertContains(response, 'sample4')
+    def test_uses_proper_template(self):
+        response = self.client.get('/tms/new-translation-memory/')
+        self.assertTemplateUsed(response, 'tms.html')
 
 
 class TranslationUnitModelTest(TestCase):
