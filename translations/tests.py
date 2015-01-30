@@ -42,7 +42,7 @@ class HomePage(TestCase):
         response = home_page(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/tms/new-translation-memory/')
     
     def test_home_page_saves_when_necessary(self):
         request = HttpRequest()
@@ -61,6 +61,19 @@ class HomePage(TestCase):
         self.assertIn('sample2', response.content.decode())
         self.assertIn('sample3', response.content.decode())
         self.assertIn('sample4', response.content.decode())
+
+class TMViewTest(TestCase):
+    def test_display_all_items(self):
+        TranslationUnit.objects.create(source='sample1', target='sample2')
+        TranslationUnit.objects.create(source='sample3', target='sample4')
+
+        response = self.client.get('/tms/new-translation-memory/')
+        
+        self.assertContains(response, 'sample1')
+        self.assertContains(response, 'sample2')
+        self.assertContains(response, 'sample3')
+        self.assertContains(response, 'sample4')
+
 
 class TranslationUnitModelTest(TestCase):
 
