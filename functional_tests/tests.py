@@ -89,7 +89,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
         
         #there is no sign of already entered items
-        page_text = self.browser.find_element_by_tag_name('body')
+        page_text = self.browser.find_element_by_tag_name('body').text
         
         self.assertNotIn('This is personal matter of the squirrel', page_text)
         self.assertNotIn('My cat peed')
@@ -106,7 +106,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertRegex(yet_new_list, '/tms/.+')
 
         #2nd user can see only his items, not items from the 1st user
-        page_text = self.browser.find_element_by_tag_name('body')
+        page_text = self.browser.find_element_by_tag_name('body').text
 
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
