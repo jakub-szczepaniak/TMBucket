@@ -1,5 +1,5 @@
 Todo :
 
-adjust models so that tunits can be in different TMs
-add unique URL for TM
+
 add URL for adding items to TM
+refactor duplicates in urls.py

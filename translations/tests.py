@@ -27,22 +27,25 @@ class TMViewTest(TestCase):
 
     def test_uses_tm_view_template(self):
 
-        response = self.client.get('/tms/new_translation_memory')
+        new_tm = TM.objects.create()
+        response = self.client.get('/tms/{id:d}'.format(id=new_tm.id))
 
         self.assertTemplateUsed(response, 'tms.html')
 
-    def test_display_all_items_from_database(self):
+    def test_display_TU_for_given_TM(self):
         
-        tm = TM.objects.create()
-        TranslationUnit.objects.create(source='sample1', target='sample2', tm=tm)
-        TranslationUnit.objects.create(source='sample3', target='sample4', tm=tm)
+        correct_trans_mem = TM.objects.create()
+        
+        TranslationUnit.objects.create(source='sample1', target='sample2', tm=correct_trans_mem)
+        TranslationUnit.objects.create(source='sample3', target='sample4', tm=correct_trans_mem)
 
-        response = self.client.get('/tms/new_translation_memory')
+        response = self.client.get('/tms/{id:d}'.format(id=correct_trans_mem.id))
 
         self.assertContains(response, 'sample1')
         self.assertContains(response, 'sample2')
         self.assertContains(response, 'sample3')
         self.assertContains(response, 'sample4')
+        self.assertNotContains(response, 'sample10')
 
     def test_can_save_POST_request(self):
         
@@ -59,13 +62,46 @@ class TMViewTest(TestCase):
         self.assertEqual(new_transunit.target, 'Test target string')
 
     def test_redirects_after_POST(self):
-        
+                
         response = self.client.post(
             '/tms/new',
             data = {'source_text':"Test source string",
                     'target_text': 'Test target string'}
             )
-        self.assertRedirects(response, '/tms/new_translation_memory')
+        new_tm = TM.objects.first()
+        self.assertRedirects(response, '/tms/{id:d}'.format(id=new_tm.id))
+    
+    def test_can_save_POST_to_proper_list(self):
+    
+        first_tm = TM.objects.create()
+        second_tm = TM.objects.create()
+
+        self.client.post(
+            '/tms/{:d}/add_item'.format(second_tm.id),
+            data = {'source_text':"Test source string",
+                    'target_text': 'Test target string'}
+            )
+
+        self.assertEqual(TranslationUnit.objects.count(), 1)
+
+        new_transunit = TranslationUnit.objects.first()
+
+        self.assertEqual(new_transunit.source, 'Test source string')
+        self.assertEqual(new_transunit.tm, second_tm.id)
+
+    def test_redirects_to_view_list(self):
+        other_tm = TM.objects.create()
+        correct_tm = TM.objects.create()
+
+        response = self.client.post(
+            '/tms/{:d}/add_item'.format(correct_tm.id),
+            data = {'source_text':"Test source string",
+                    'target_text': 'Test target string'}
+            )
+
+        self.assertRedirects(response, '/tms/{:d}/'.format(correct_tm.id))
+
+
         
 class TMandTUModelTest(TestCase):
 
