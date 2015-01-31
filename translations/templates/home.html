@@ -1,11 +1,6 @@
-<html>
-    <title>TMBucket</title>
-    <h1>Start filling your TMBucket</h1>
-    <form method="POST" action='/tms/new'>
-        <input name='source_text' id="id_source_text" placeholder='Enter source text' />
-        <input name='target_text' id="id_target_text" placeholder='Enter translation text' />
-        <button action="submit">Add</button>
-        {% csrf_token %}
-    </form>
+{% extends 'base.html' %}
+
+    {% block header_text %}Start filling your TMBucket{% endblock %}
+
+    {% block form_action %}/tms/new{% endblock %}
     
-</html>

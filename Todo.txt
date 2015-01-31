@@ -1,5 +1,2 @@
 Todo :
 
-
-add unique URL for TM
-add URL for adding items to TM

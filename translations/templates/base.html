@@ -1,0 +1,16 @@
+<html>
+<head>
+    <title>TMBucket</title>
+</head>
+<body>
+    <h1>{% block header_text %} {% endblock %}</h1>
+    <form method="POST" action='{% block form_action %} {% endblock %}'>
+        <input name='source_text' id="id_source_text" placeholder='Enter source text' />
+        <input name='target_text' id="id_target_text" placeholder='Enter translation text' />
+        <button action="submit">Add</button>
+        {% csrf_token %}
+    </form>
+    {% block table%}
+    {% endblock %}
+</body>
+</html>
