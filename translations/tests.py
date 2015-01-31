@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from translations.views import home_page
-from translations.models import TranslationUnit
+from translations.models import TransUnit
 
 class HomePage(TestCase):
 
@@ -24,8 +24,8 @@ class HomePage(TestCase):
 
 class TMViewTest(TestCase):
     def test_displays_all_items(self):
-        TranslationUnit.objects.create(source='sample1', target='sample2')
-        TranslationUnit.objects.create(source='sample3', target='sample4')
+        TransUnit.objects.create(source='sample1', target='sample2')
+        TransUnit.objects.create(source='sample3', target='sample4')
 
         response = self.client.get('/tms/new-translation-memory/')
         
@@ -45,8 +45,8 @@ class TMViewTest(TestCase):
             'source_text':"Test source string",
             'target_text':'Test target string'})
 
-        self.assertEqual(TranslationUnit.objects.count(), 1)
-        new_transunit = TranslationUnit.objects.first()
+        self.assertEqual(TransUnit.objects.count(), 1)
+        new_transunit = TransUnit.objects.first()
 
         self.assertEqual(new_transunit.source, 'Test source string')
         self.assertEqual(new_transunit.target, 'Test target string')
@@ -63,22 +63,22 @@ class TMViewTest(TestCase):
 
 
 
-class TranslationUnitModelTest(TestCase):
+class TransUnitModelTest(TestCase):
 
     def test_saving_and_retrieving(self):
-        first_translation_unit = TranslationUnit()
+        first_translation_unit = TransUnit()
         first_translation_unit.source = "Source"
         first_translation_unit.target = "Target"
 
         first_translation_unit.save()
 
-        second_translation_unit = TranslationUnit()
+        second_translation_unit = TransUnit()
         second_translation_unit.source = 'The 2nd Source'
         second_translation_unit.target = 'snd target'
 
         second_translation_unit.save()
 
-        saved_translation_units = TranslationUnit.objects.all()
+        saved_translation_units = TransUnit.objects.all()
         self.assertEqual(saved_translation_units.count(), 2)
        
         first_saved_translation_unit = saved_translation_units[0]
