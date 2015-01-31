@@ -111,5 +111,5 @@ class NewVisitorTest(LiveServerTestCase):
 
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
-        self.fail('Finish your test!')
+       
 
