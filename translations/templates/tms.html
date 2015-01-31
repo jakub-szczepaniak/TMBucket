@@ -1,14 +1,14 @@
 <html>
     <title>TMBucket</title>
     <h1>TMBucket</h1>
-    <form method="POST" action='/tms/new'>
+    <form method="POST" action='/tms/{{ tm.id }}/add_transunit'>
         <input name='source_text' id="id_source_text" placeholder='Enter source text' />
         <input name='target_text' id="id_target_text" placeholder='Enter translation text' />
         <button type="submit">Add</button>
         {% csrf_token %}
     </form>
     <table id="id_translation_table">
-        {% for trans_unit in trans_units %}
+        {% for trans_unit in tm.transunit_set.all %}
         <tr>
             <td>{{ forloop.counter }}: {{ trans_unit.source }}</td>
             <td>{{ trans_unit.target }}</td>
