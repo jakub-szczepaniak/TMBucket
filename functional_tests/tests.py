@@ -112,4 +112,20 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
        
+    def test_layout_and_styles(self):
+        #user goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+        #input boxes are centered
+        inputbox = self.browser.find_element_by_id('id_source_text')
+        inputbox2 = self.browser.find_element_by_id('id_target_text')
+
+        self.assertAlmostEqual(
+            (inputbox.location['x'] + inputbox.size['width']) / 2,
+            512,
+            delta=5)
+        #one below the other
+        #after entering the first transunits
+        #the transunits are also displayed centered
+        self.fail("Finish your test")
 
