@@ -5,7 +5,7 @@
     {% block form_action %}/tms/{{ tm.id }}/add_transunit{% endblock %}
     
     {% block table %}
-    <table id="id_translation_table">
+    <table id="id_translation_table" class='table'>
         {% for trans_unit in tm.transunit_set.all %}
         <tr>
             <td>{{ forloop.counter }}: {{ trans_unit.source }}</td>

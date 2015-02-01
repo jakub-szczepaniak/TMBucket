@@ -1,11 +1,12 @@
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
 
     def setUp(self):
@@ -15,6 +16,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     def tearDown(self):
         
+        self.browser.refresh()
         self.browser.quit()
     def check_for_element_in_table(self,row_text):
         
@@ -82,6 +84,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_element_in_table('Meine Katze hat in einem Koffer gepinkelt')
                 
         #User closes the windows
+        self.browser.refresh()
         self.browser.quit()
 
         #new user comes to the home page
@@ -121,11 +124,18 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox2 = self.browser.find_element_by_id('id_target_text')
 
         self.assertAlmostEqual(
-            (inputbox.location['x'] + inputbox.size['width']) / 2,
+            inputbox.location['x'] + (inputbox.size['width'])/ 2,
             512,
-            delta=5)
+            delta=40)
         #one below the other
+        self.assertAlmostEqual(
+            inputbox2.location['x'] + inputbox2.size['width']/2,
+            512,
+            delta=40)
+        
         #after entering the first transunits
         #the transunits are also displayed centered
-        self.fail("Finish your test")
+
+
+        
 
