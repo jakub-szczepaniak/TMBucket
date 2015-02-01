@@ -1,5 +1,1 @@
 Todo :
-
-
-add URL for adding items to TM
-refactor duplicates in urls.py
