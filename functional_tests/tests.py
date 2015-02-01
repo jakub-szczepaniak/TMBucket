@@ -4,10 +4,23 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
-
+import sys
 
 class NewVisitorTest(StaticLiveServerTestCase):
 
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_url == cls.live_server_url:
+            super.tearDownClass()
 
     def setUp(self):
         
@@ -27,7 +40,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_can_enter_translations_and_retrieve(self):
         #User goes to main page of the TM bucket
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         #and sees index page with 'TMBucket' as a browser title and 
         #a header mentioning Translation Repository (bucket)
         header_text = self.browser.find_element_by_tag_name('h1')
@@ -89,7 +102,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         #new user comes to the home page
         self.browser = webdriver.Chrome()
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         
         #there is no sign of already entered items
         page_text = self.browser.find_element_by_tag_name('body').text
@@ -117,7 +130,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
        
     def test_layout_and_styles(self):
         #user goes to the home page
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
         #input boxes are centered
         inputbox = self.browser.find_element_by_id('id_source_text')
@@ -132,7 +145,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
             inputbox2.location['x'] + inputbox2.size['width']/2,
             512,
             delta=40)
-        
+
         #after entering the first transunits
         #the transunits are also displayed centered
 
