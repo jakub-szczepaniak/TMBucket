@@ -1,5 +1,6 @@
 from django.test import TestCase
 from translations.models import TransUnit, TM
+from django.core.exceptions import ValidationError
         
 
 class TransUnitandTMModelTest(TestCase):
@@ -39,5 +40,11 @@ class TransUnitandTMModelTest(TestCase):
         self.assertEqual(second_saved_translation_unit, second_translation_unit)
 
         self.assertEqual(second_saved_translation_unit.tm, tm)
+    def test_cannot_save_empty_transunit(self):
+        new_tm = TM.objects.create()
+        empty_transunit = TransUnit(tm=new_tm,source='', target='')
+        with self.assertRaises(ValidationError):
+            empty_transunit.save()
+            empty_transunit.full_clean()
 
         

@@ -2,6 +2,7 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+from django.utils.html import escape
 
 from translations.views import home_page
 from translations.models import TransUnit, TM
@@ -21,7 +22,25 @@ class HomePage(TestCase):
         expected_html = render_to_string('home.html')
         
         self.assertEqual(response.content.decode(), expected_html)
-
+    
+    def test_validation_errors_are_send_back_to_home_page(self):
+        response = self.client.post(
+            '/tms/new',
+            data = {
+            'source_text':"",
+            'target_text':''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error = escape("You can't submit empty string")    
+        self.assertContains(response, expected_error)
+    def test_empty_items_are_not_saved(self):
+        self.client.post(
+            '/tms/new',
+            data = {
+            'source_text':"",
+            'target_text':''})
+        self.assertEqual(TransUnit.objects.count(), 0)
+        self.assertEqual(TM.objects.count(), 0)
 
 class TMViewTest(TestCase):
     def test_displays_tunits_from_proper_tm(self):
