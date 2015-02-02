@@ -1,43 +1,12 @@
-from django.test import LiveServerTestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
-import time
-import sys
-
-class NewVisitorTest(StaticLiveServerTestCase):
 
 
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        
-        self.browser = webdriver.Chrome()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        
-        self.browser.refresh()
-        self.browser.quit()
-    def check_for_element_in_table(self,row_text):
-        
-        table = self.browser.find_element_by_id('id_translation_table')
-        rows = table.find_elements_by_tag_name('td')
-        
-        self.assertIn(row_text, [row.text for row in rows])
     
+
+class NewVisitorTest(FunctionalTest):
+
 
     def test_can_enter_translations_and_retrieve(self):
         #User goes to main page of the TM bucket
@@ -131,43 +100,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
     
-    @unittest.skip   
-    def test_layout_and_styles(self):
-        #user goes to the home page
-        self.browser.get(self.server_url)
-        self.browser.set_window_size(1024, 768)
-        #input boxes are centered
-        inputbox = self.browser.find_element_by_id('id_source_text')
-        inputbox2 = self.browser.find_element_by_id('id_target_text')
 
-        self.assertAlmostEqual(
-            inputbox.location['x'] + (inputbox.size['width'])/ 2,
-            512,
-            delta=40)
-        #one below the other
-        self.assertAlmostEqual(
-            inputbox2.location['x'] + inputbox2.size['width']/2,
-            512,
-            delta=40)
-        self.fail('Finish test!')
-        #after entering the first transunits
-        #the transunits are also displayed centered
-
-    @unittest.skip
-    def test_cannot_enter_blank_items(self) :
-        #user goes to the home page
-        # and hits enter on source and target boxes empty
-        # page refreshes and notification is shown
-        # that blank items cannot be submitted
-        #user now adds some text to source and target
-        #user clicks submit and items are added/displayed
-        #user adds text to source but not to target
-        #page refreshes and notification is shown that blank items cannot be
-        #submitted
-        #user adds some text to target but not to source
-        #page refreshes and notification is shown that blank items cannot be 
-        #submitted
-        self.fail('Finish your test')
 
 
 
