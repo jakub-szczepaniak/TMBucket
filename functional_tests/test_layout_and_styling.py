@@ -23,9 +23,20 @@ class LayoutAndStylingTest(FunctionalTest):
             inputbox2.location['x'] + inputbox2.size['width']/2,
             512,
             delta=40)
-        self.fail('Finish test!')
         #after entering the first transunits
+        inputbox.send_keys('this is sample source')
+        inputbox2.send_keys('Es ist ein Beispiel')
+        inputbox2.submit()
+        
         #the transunits are also displayed centered
+        table = self.browser.find_element_by_id('id_translation_table')
+        self.assertAlmostEqual(
+            table.location['x'] + table.size['width']/2,
+            512,
+            delta=40)
+        
+        
+        
 
 
 
