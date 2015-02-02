@@ -130,7 +130,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         self.assertNotIn('Meine Katze', page_text)
         self.assertIn('Klicken', page_text)
-       
+    
+    @unittest.skip   
     def test_layout_and_styles(self):
         #user goes to the home page
         self.browser.get(self.server_url)
@@ -148,9 +149,26 @@ class NewVisitorTest(StaticLiveServerTestCase):
             inputbox2.location['x'] + inputbox2.size['width']/2,
             512,
             delta=40)
-
+        self.fail('Finish test!')
         #after entering the first transunits
         #the transunits are also displayed centered
+
+    @unittest.skip
+    def test_cannot_enter_blank_items(self) :
+        #user goes to the home page
+        # and hits enter on source and target boxes empty
+        # page refreshes and notification is shown
+        # that blank items cannot be submitted
+        #user now adds some text to source and target
+        #user clicks submit and items are added/displayed
+        #user adds text to source but not to target
+        #page refreshes and notification is shown that blank items cannot be
+        #submitted
+        #user adds some text to target but not to source
+        #page refreshes and notification is shown that blank items cannot be 
+        #submitted
+        self.fail('Finish your test')
+
 
 
         
