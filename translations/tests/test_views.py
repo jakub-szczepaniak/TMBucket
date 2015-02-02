@@ -107,14 +107,12 @@ class TMViewTest(TestCase):
         new_tm = TM.objects.first()
         self.assertRedirects(response,'/tms/{:d}/'.format(new_tm.id) )
 
-class NewTransUnitTest(TestCase):   
-
-    def test_can_save_TransUnit_to_exisiting_tm(self):
+    def test_can_save_POST_TransUnit_to_exisiting_tm(self):
         first_tm = TM.objects.create()
         correct_tm = TM.objects.create()
 
         self.client.post(
-            '/tms/{}/add_transunit'.format(correct_tm.id),
+            '/tms/{}/'.format(correct_tm.id),
             data = {
             'source_text':"Test source string",
             'target_text':'Test target string'})
@@ -126,12 +124,12 @@ class NewTransUnitTest(TestCase):
         self.assertEqual(new_transunit.target, 'Test target string')
         self.assertEqual(new_transunit.tm, correct_tm)
 
-    def test_redirects_to_tm_view(self):
+    def test_POST_redirects_to_list_view(self):
         other_tm = TM.objects.create()
         correct_tm = TM.objects.create()
 
         response = self.client.post(
-            '/tms/{}/add_transunit'.format(correct_tm.id),
+            '/tms/{}/'.format(correct_tm.id),
             data = {
             'source_text':"Test source string",
             'target_text':'Test target string'})
