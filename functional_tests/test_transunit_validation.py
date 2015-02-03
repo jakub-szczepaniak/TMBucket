@@ -1,7 +1,7 @@
 from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+import time
 
 class TransUnitValidationTest(FunctionalTest):
    
@@ -13,11 +13,11 @@ class TransUnitValidationTest(FunctionalTest):
 
         # page refreshes and notification is shown
         # that blank items cannot be submitted
-        error = self.browser.find_element_by_css_selector('.has_error')
+        error = self.browser.find_element_by_css_selector('.has-error')
         self.assertEqual(error.text, "You can't submit empty string")
         #user now adds some text to source and but not to target
         self.browser.find_element_by_id('id_source_text').send_keys('Sample text')
-        self.browser.find_element_by_id('id_target_text').sumbit()
+        self.browser.find_element_by_id('id_target_text').submit()
         #page refreshes and notification is shown that blank items cannot be
         #submitted
         error = self.browser.find_element_by_css_selector('.has_error')
