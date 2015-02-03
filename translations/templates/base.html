@@ -22,7 +22,7 @@
         <button action="submit" class='form-control' id='id_add_translations'>Add</button>
         {% csrf_token %}
         {% if error %}
-        <div class='form-control has-error'>
+        <div class='form-group has-error'>
             <span class='help-block'>{{ error }}</span>
         </div>
         {% endif %}
