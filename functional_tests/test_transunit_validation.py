@@ -20,23 +20,24 @@ class TransUnitValidationTest(FunctionalTest):
         self.browser.find_element_by_id('id_target_text').submit()
         #page refreshes and notification is shown that blank items cannot be
         #submitted
-        error = self.browser.find_element_by_css_selector('.has_error')
+        error = self.browser.find_element_by_css_selector('.has-error')
 
-        self.self.assertEqual(error.text, "You can't submit empty string")
+        self.assertEqual(error.text, "You can't submit empty string")
         #this time user adds both source and target texts
-        self.browser.find_element_by_id('id_source_text').send_keys('Sample text1')
-        self.browser.find_element_by_id('id_target_text').send_keys('Beispiel1')
+        self.browser.find_element_by_id('id_source_text').send_keys('Sample text')
+        self.browser.find_element_by_id('id_target_text').send_keys('Beispiel')
         self.browser.find_element_by_id('id_target_text').submit()
         #items are visible on the page
         table = self.browser.find_element_by_id('id_translation_table')
 
-        self.check_for_element_in_table('Sample text')
+        self.check_for_element_in_table('1: Sample text')
         self.check_for_element_in_table('Beispiel')
         #user tries to submit only target text
-        input2 = self.browser.find_element_by_id('id_target_text').send_keys('Beispiel')
-        input2.submit()
+        self.browser.find_element_by_id('id_target_text').send_keys('Beispiel')
+        self.browser.find_element_by_id('id_target_text').submit()
+        
         #page refreshes and same notification is visible
-        error = self.browser.find_element_by_css_selector('.has_error')
+        error = self.browser.find_element_by_css_selector('.has-error')
         self.self.assertEqual(error.text, "You can't submit empty string")        
         
         #finally user adds both source and target texts
