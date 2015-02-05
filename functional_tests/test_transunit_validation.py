@@ -38,7 +38,7 @@ class TransUnitValidationTest(FunctionalTest):
         
         #page refreshes and same notification is visible
         error = self.browser.find_element_by_css_selector('.has-error')
-        self.self.assertEqual(error.text, "You can't submit empty string")        
+        self.assertEqual(error.text, "You can't submit empty string")        
         
         #finally user adds both source and target texts
         self.browser.find_element_by_id('id_source_text').send_keys('Sample text')
@@ -49,7 +49,7 @@ class TransUnitValidationTest(FunctionalTest):
 
         table = self.browser.find_element_by_id('id_translation_table')
 
-        self.check_for_element_in_table('Sample text')
+        self.check_for_element_in_table('2: Sample text')
         self.check_for_element_in_table('Beispiel')
 
         self.browser.refresh()

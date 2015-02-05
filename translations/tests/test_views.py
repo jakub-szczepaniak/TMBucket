@@ -6,6 +6,7 @@ from django.utils.html import escape
 
 from translations.views import home_page
 from translations.models import TransUnit, TM
+from unittest import skip
 
 
 class HomePage(TestCase):
@@ -124,7 +125,7 @@ class TMViewTest(TestCase):
         self.assertEqual(new_transunit.target, 'Test target string')
         self.assertEqual(new_transunit.tm, correct_tm)
 
-    def test_POST_redirects_to_list_view(self):
+    def test_POST_redirects_to_tms_view(self):
         other_tm = TM.objects.create()
         correct_tm = TM.objects.create()
 
@@ -135,4 +136,18 @@ class TMViewTest(TestCase):
             'target_text':'Test target string'})
 
         self.assertRedirects(response, '/tms/{:d}/'.format(correct_tm.id))
-       
+    
+    def test_validation_error_go_to_tms_view(self):
+        
+        tm_to_use = TM.objects.create()
+        response = self.client.post(
+            '/tms/{}/'.format(tm_to_use.id),
+            data = {
+            'source_text':"",
+            'target_text':''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,'tms.html')
+        expected_error = escape("You can't submit empty string")
+
+        self.assertContains(response, expected_error)
+
