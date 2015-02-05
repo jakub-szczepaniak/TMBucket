@@ -1,29 +1,49 @@
-from django.core.urlresolvers import resolve
 from django.test import TestCase
-from django.http import HttpRequest
-from django.template.loader import render_to_string
 from django.utils.html import escape
-
-from translations.views import home_page
-from translations.models import TransUnit, TM
 from unittest import skip
 
+from translations.models import TransUnit, TM
+from translations.forms import TransUnitForm
 
-class HomePage(TestCase):
 
-    def test_root_url_resolves_to_home_page(self):
-
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-    def test_home_page_returns_correct_html(self):
-        
-        request = HttpRequest()
-        response = home_page(request)
-        expected_html = render_to_string('home.html')
-        
-        self.assertEqual(response.content.decode(), expected_html)
+class HomePageTest(TestCase):
+    maxDiff = None
     
+    def test_home_page_renders_home_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_home_page_uses_transunit_form(self):
+        response = self.client.get('/')
+
+        self.assertIsInstance(response.context['form'], TransUnitForm)
+class NewTMViewTest(TestCase):
+
+
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/tms/new',
+            data = {
+            'source_text':"Test source string",
+            'target_text':'Test target string'})
+        new_tm = TM.objects.first()
+        self.assertRedirects(response,'/tms/{:d}/'.format(new_tm.id) )
+
+    def test_saving_POST_request(self):
+        
+        self.client.post(
+            '/tms/new',
+            data = {
+            'source_text':"Test source string",
+            'target_text':'Test target string'})
+
+        self.assertEqual(TransUnit.objects.count(), 1)
+        new_transunit = TransUnit.objects.first()
+
+
+        self.assertEqual(new_transunit.source, 'Test source string')
+        self.assertEqual(new_transunit.target, 'Test target string')
+
     def test_validation_errors_are_send_back_to_home_page(self):
         response = self.client.post(
             '/tms/new',
@@ -76,20 +96,7 @@ class TMViewTest(TestCase):
         tm = TM.objects.create()
         response = self.client.get('/tms/{:d}/'.format(tm.id))
         self.assertTemplateUsed(response, 'tms.html')
-    def test_saving_POST_request(self):
-        
-        self.client.post(
-            '/tms/new',
-            data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
-
-        self.assertEqual(TransUnit.objects.count(), 1)
-        new_transunit = TransUnit.objects.first()
-
-
-        self.assertEqual(new_transunit.source, 'Test source string')
-        self.assertEqual(new_transunit.target, 'Test target string')
+   
 
 
     def test_passed_correct_tm_to_template(self):
@@ -99,14 +106,7 @@ class TMViewTest(TestCase):
             '/tms/{:d}/'.format(correct_tm.id))
         self.assertEqual(response.context['tm'], correct_tm)
         
-    def test_redirects_after_POST(self):
-        response = self.client.post(
-            '/tms/new',
-            data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
-        new_tm = TM.objects.first()
-        self.assertRedirects(response,'/tms/{:d}/'.format(new_tm.id) )
+    
 
     def test_can_save_POST_TransUnit_to_exisiting_tm(self):
         first_tm = TM.objects.create()

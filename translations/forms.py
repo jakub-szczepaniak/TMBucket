@@ -3,7 +3,7 @@ from translations.models import TransUnit
 
 EMPTY_ITEM_ERROR = "You can't submit empty string"
 
-class TMForm(forms.models.ModelForm):
+class TransUnitForm(forms.models.ModelForm):
     class Meta:
         model = TransUnit
         fields = ('source', 'target')
@@ -15,7 +15,7 @@ class TMForm(forms.models.ModelForm):
             }),
         'target' :forms.fields.TextInput(
             attrs={
-            'placeholder': "Enter target text", 
+            'placeholder': "Enter translation text", 
             'class' : "form-control",
             })
             } 

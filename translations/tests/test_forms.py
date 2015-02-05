@@ -1,17 +1,17 @@
 from django.test import TestCase
 
-from translations.forms import TMForm, EMPTY_ITEM_ERROR
+from translations.forms import TransUnitForm, EMPTY_ITEM_ERROR
 
 class TMFormTest(TestCase):
 
     def test_form_render_html(self):
-        tmform = TMForm()
+        tmform = TransUnitForm()
         self.assertIn('placeholder="Enter source text"', tmform.as_p())
-        self.assertIn('placeholder="Enter target text"', tmform.as_p())
+        self.assertIn('placeholder="Enter translation text"', tmform.as_p())
         self.assertIn('class="form-control"', tmform.as_p())
 
     def test_form_validation_for_blanks(self):
-        new_form = TMForm(
+        new_form = TransUnitForm(
             data={
             'source':'',
             'target':''})

@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 
 from translations.models import TransUnit, TM
+from translations.forms import TransUnitForm
 
 # Create your views here.
 def home_page(request):
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'form': TransUnitForm()})
 def view_tms(request, tm_id):
     tm_to_show = TM.objects.get(id=tm_id)
     error = None
