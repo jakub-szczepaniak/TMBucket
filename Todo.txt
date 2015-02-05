@@ -2,4 +2,5 @@ Todo :
 
 
 remove hardcoded urls from views
-remove hardcoded urls from templates
+
+remove duplication of validation from views
