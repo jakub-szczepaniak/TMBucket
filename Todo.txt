@@ -1,6 +1,4 @@
 Todo :
 
 
-remove hardcoded urls from views
-
 remove duplication of validation from views

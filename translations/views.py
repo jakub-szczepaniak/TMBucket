@@ -17,7 +17,7 @@ def view_tms(request, tm_id):
         try:
             new_transunit.full_clean()
             new_transunit.save()
-            return redirect('/tms/{:d}/'.format(tm_to_show.id))
+            return redirect(tm_to_show)
         except ValidationError:
             error = "You can't submit empty string"
         
@@ -36,7 +36,7 @@ def new_tm(request):
         new_tm.delete()
         error = "You can't submit empty string"
         return render(request, 'home.html', {'error' : error })
-    return redirect('/tms/{:d}/'.format(new_tm.id))
+    return redirect(new_tm)
 
 
     

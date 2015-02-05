@@ -46,5 +46,11 @@ class TransUnitandTMModelTest(TestCase):
         with self.assertRaises(ValidationError):
             empty_transunit.save()
             empty_transunit.full_clean()
+    
+    def test_get_absolute_url(self):
+        new_tm = TM.objects.create()
+        self.assertEqual(
+            new_tm.get_absolute_url(),
+            '/tms/{}/'.format(new_tm.id))
 
         
