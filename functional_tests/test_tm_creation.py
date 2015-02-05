@@ -19,8 +19,8 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('TMBucket', header_text.text)
         
         #User is prompted to enter text and its translation.
-        inputbox = self.browser.find_element_by_id('id_source_text')
-        inputbox2 = self.browser.find_element_by_id('id_target_text')
+        inputbox = self.get_source_input_box()
+        inputbox2 = self.get_target_input_box()
 
         self.assertEqual('Enter source text', inputbox.get_attribute('placeholder'))
         self.assertEqual('Enter translation text', inputbox2.get_attribute('placeholder'))
@@ -50,8 +50,8 @@ class NewVisitorTest(FunctionalTest):
         #User enters another text:
         #'My cat peed in the suitcase' -> 'Meine Katze hat in einem Koffer gepinkelt'
 
-        inputbox = self.browser.find_element_by_id('id_source_text')
-        inputbox2 = self.browser.find_element_by_id('id_target_text')
+        inputbox = self.get_source_input_box()
+        inputbox2 = self.get_target_input_box()
         
         self.assertEqual('Enter source text', inputbox.get_attribute('placeholder'))
         self.assertEqual('Enter translation text', inputbox2.get_attribute('placeholder'))
@@ -82,8 +82,8 @@ class NewVisitorTest(FunctionalTest):
 
         #User2 enters his own text and translation
         
-        inputbox = self.browser.find_element_by_id('id_source_text')
-        inputbox2 = self.browser.find_element_by_id('id_target_text')
+        inputbox = self.get_source_input_box()
+        inputbox2 = self.get_target_input_box()
         inputbox.send_keys('Click here')
         inputbox2.send_keys('Klicken Sie hier')
         inputbox2.submit()

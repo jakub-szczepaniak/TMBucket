@@ -22,4 +22,5 @@ class TMFormTest(TestCase):
         self.assertEqual(
             new_form.errors['target'],
             [EMPTY_ITEM_ERROR])
+       
         

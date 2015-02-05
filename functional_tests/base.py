@@ -33,6 +33,12 @@ class FunctionalTest(StaticLiveServerTestCase):
         rows = table.find_elements_by_tag_name('td')
         
         self.assertIn(row_text, [row.text for row in rows])
+    def get_source_input_box(self):
+        return self._get_input_box('id_source')
+    def get_target_input_box(self):
+        return self._get_input_box('id_target')
+    def _get_input_box(self, id_input):
+        return self.browser.find_element_by_id(id_input)
     
 
 
