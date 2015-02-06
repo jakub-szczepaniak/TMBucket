@@ -24,8 +24,8 @@ class NewTMViewTest(TestCase):
         response = self.client.post(
             '/tms/new',
             data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
+            'source':"Test source string",
+            'target':'Test target string'})
         new_tm = TM.objects.first()
         self.assertRedirects(response,'/tms/{:d}/'.format(new_tm.id) )
 
@@ -34,8 +34,8 @@ class NewTMViewTest(TestCase):
         self.client.post(
             '/tms/new',
             data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
+            'source':"Test source string",
+            'target':'Test target string'})
 
         self.assertEqual(TransUnit.objects.count(), 1)
         new_transunit = TransUnit.objects.first()
@@ -48,8 +48,8 @@ class NewTMViewTest(TestCase):
         response = self.client.post(
             '/tms/new',
             data = {
-            'source_text':"",
-            'target_text':''})
+            'source':"",
+            'target':''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
         expected_error = escape("You can't submit empty string")    
@@ -58,8 +58,8 @@ class NewTMViewTest(TestCase):
         self.client.post(
             '/tms/new',
             data = {
-            'source_text':"",
-            'target_text':''})
+            'source':"",
+            'target':''})
         self.assertEqual(TransUnit.objects.count(), 0)
         self.assertEqual(TM.objects.count(), 0)
 
@@ -115,8 +115,8 @@ class TMViewTest(TestCase):
         self.client.post(
             '/tms/{}/'.format(correct_tm.id),
             data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
+            'source':"Test source string",
+            'target':'Test target string'})
         
         self.assertEqual(TransUnit.objects.count(), 1)
         new_transunit = TransUnit.objects.first()
@@ -132,8 +132,8 @@ class TMViewTest(TestCase):
         response = self.client.post(
             '/tms/{}/'.format(correct_tm.id),
             data = {
-            'source_text':"Test source string",
-            'target_text':'Test target string'})
+            'source':"Test source string",
+            'target':'Test target string'})
 
         self.assertRedirects(response, '/tms/{:d}/'.format(correct_tm.id))
     
@@ -143,8 +143,8 @@ class TMViewTest(TestCase):
         response = self.client.post(
             '/tms/{}/'.format(tm_to_use.id),
             data = {
-            'source_text':"",
-            'target_text':''})
+            'source':"",
+            'target':''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response,'tms.html')
         expected_error = escape("You can't submit empty string")

@@ -12,8 +12,8 @@ def view_tms(request, tm_id):
     error = None
     if request.method == 'POST':
         new_transunit =TransUnit(
-                source=request.POST['source_text'],
-                target=request.POST['target_text'],
+                source=request.POST['source'],
+                target=request.POST['target'],
                 tm=tm_to_show)
         try:
             new_transunit.full_clean()
@@ -27,8 +27,8 @@ def view_tms(request, tm_id):
 def new_tm(request):
     new_tm = TM.objects.create()
     new_transunit =TransUnit(
-        source=request.POST['source_text'],
-        target=request.POST['target_text'],
+        source=request.POST['source'],
+        target=request.POST['target'],
         tm=new_tm)
     try:
         new_transunit.full_clean()
