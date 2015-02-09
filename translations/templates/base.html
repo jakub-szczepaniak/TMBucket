@@ -17,9 +17,11 @@
         {{ form.target }}
         <button action="submit" class='form-control' id='id_add_translations'>Add</button>
         {% csrf_token %}
-        {% if error %}
+        {% if form.errors %}
         <div class='form-group has-error'>
-            <span class='help-block'>{{ error }}</span>
+            <span class='help-block'>{{ form.source.errors }}</span>
+            <span class='help-block'>{{ form.target.errors }}</span>
+            
         </div>
         {% endif %}
     </form>

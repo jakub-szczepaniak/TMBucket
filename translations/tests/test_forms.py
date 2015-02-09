@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from translations.forms import TransUnitForm, EMPTY_ITEM_ERROR
+from translations.forms import TransUnitForm, EMPTY_SOURCE_ERROR, EMPTY_TARGET_ERROR
 
 class TMFormTest(TestCase):
 
@@ -18,10 +18,10 @@ class TMFormTest(TestCase):
         self.assertFalse(new_form.is_valid())
         self.assertEqual(
             new_form.errors['source'],
-            [EMPTY_ITEM_ERROR])
+            [EMPTY_SOURCE_ERROR])
         self.assertEqual(
             new_form.errors['target'],
-            [EMPTY_ITEM_ERROR])
+            [EMPTY_TARGET_ERROR])
     
        
         

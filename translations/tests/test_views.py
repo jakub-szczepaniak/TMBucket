@@ -3,7 +3,7 @@ from django.utils.html import escape
 from unittest import skip
 
 from translations.models import TransUnit, TM
-from translations.forms import TransUnitForm
+from translations.forms import TransUnitForm, EMPTY_SOURCE_ERROR, EMPTY_TARGET_ERROR
 
 
 class HomePageTest(TestCase):
@@ -18,7 +18,13 @@ class HomePageTest(TestCase):
 
         self.assertIsInstance(response.context['form'], TransUnitForm)
 class NewTMViewTest(TestCase):
-
+    def post_invalid_input(self):
+    
+        return self.client.post(
+            '/tms/new',
+            data = {
+            'source':"",
+            'target':''})
 
     def test_redirects_after_POST(self):
         response = self.client.post(
@@ -44,26 +50,35 @@ class NewTMViewTest(TestCase):
         self.assertEqual(new_transunit.source, 'Test source string')
         self.assertEqual(new_transunit.target, 'Test target string')
 
-    def test_validation_errors_are_send_back_to_home_page(self):
-        response = self.client.post(
-            '/tms/new',
-            data = {
-            'source':"",
-            'target':''})
+    
+    def test_invalid_input_renders_home_template(self):
+        response = self.post_invalid_input()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
-        expected_error = escape("You can't submit empty string")    
-        self.assertContains(response, expected_error)
+
+    def test_validation_errors_are_shown_on_home_page(self):
+        response = self.post_invalid_input()
+        self.assertContains(response, escape(EMPTY_SOURCE_ERROR))
+
+  
+    def test_invalid_input_passes_form_to_template(self):
+        response = self.post_invalid_input()
+        self.assertIsInstance(response.context['form'], TransUnitForm)
+
+
     def test_empty_items_are_not_saved(self):
-        self.client.post(
-            '/tms/new',
-            data = {
-            'source':"",
-            'target':''})
+        self.post_invalid_input()
         self.assertEqual(TransUnit.objects.count(), 0)
         self.assertEqual(TM.objects.count(), 0)
 
 class TMViewTest(TestCase):
+    def post_invalid_input(self):
+        tm_to_use = TM.objects.create()
+        return self.client.post(
+            '/tms/{}/'.format(tm_to_use.id),
+            data = {
+            'source':"",
+            'target':''})
     def test_displays_tunits_from_proper_tm(self):
         correct_tm = TM.objects.create()
         TransUnit.objects.create(
@@ -137,17 +152,31 @@ class TMViewTest(TestCase):
 
         self.assertRedirects(response, '/tms/{:d}/'.format(correct_tm.id))
     
-    def test_validation_error_go_to_tms_view(self):
+    
+    def test_displays_transunit_form(self):
+        new_tm = TM.objects.create()
+        response = self.client.get(
+            '/tms/{:d}/'.format(new_tm.id))
         
-        tm_to_use = TM.objects.create()
-        response = self.client.post(
-            '/tms/{}/'.format(tm_to_use.id),
-            data = {
-            'source':"",
-            'target':''})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response,'tms.html')
-        expected_error = escape("You can't submit empty string")
+        self.assertIsInstance(response.context['form'], TransUnitForm)
+        self.assertContains(response, 'name="source"')
+        self.assertContains(response, 'name="target"')
 
-        self.assertContains(response, expected_error)
+    def test_for_invalid_input_nothing_saved_to_db(self):
+        self.post_invalid_input()
+        self.assertEqual(TransUnit.objects.count(), 0)
+
+    def test_for_invalid_input_renders_tms_template(self):
+        response = self.post_invalid_input()
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tms.html')
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        response = self.post_invalid_input()
+        self.assertIsInstance(response.context['form'], TransUnitForm)
+
+    def test_for_invalid_input_shows_error_on_page(self):
+        response = self.post_invalid_input()
+        self.assertContains(response, escape(EMPTY_TARGET_ERROR))
+
 
